@@ -27,7 +27,7 @@ onMounted(() => {
           Authenticating...
         </span>
         <span v-else class="flex items-center gap-2">
-          <Figma/>
+          <Figma class="w-5 h-5"/>
         Login with Figma
       </span>
       </Button>
