@@ -36,12 +36,12 @@ onMounted(() => projectStore.list());
     </div>
 
     <div class="grid grid-cols-3 gap-4">
-      <Card class="m-0" v-for="project in projectStore.projects" :key="project.id">
-        <img src="https://picsum.photos/1920/1080" class="rounded-t-xl">
+      <Card class="m-0 bg-gray-100" v-for="project in projectStore.projects" :key="project.id">
+        <img :src="project.previewUrl" :alt="project.name" class="rounded-t-xl h-64 object-contain">
 
-        <div>
+        <div class="bg-white rounded-xl">
           <div class="mx-4 my-3">
-            <h3 class="text-lg font-medium">Sample project</h3>
+            <h3 class="text-lg font-medium">{{project.name}}</h3>
           </div>
           <div class="mx-3 my-3 flex justify-end">
             <Button class="cursor-pointer">View</Button>

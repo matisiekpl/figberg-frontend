@@ -16,6 +16,7 @@ export const useProjectStore = defineStore('project', () => {
         importing.value = true;
         await projectsApi.add(link.value);
         await list();
+        link.value = '';
         importing.value = false;
     }
 
