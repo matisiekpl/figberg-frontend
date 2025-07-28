@@ -35,6 +35,8 @@ export const useProjectStore = defineStore('project', () => {
             
             if (previousPercent < 100 && currentPercent === 100) {
                 await invalidate();
+                await wait(5000);
+
                 const images = document.querySelectorAll('img');
                 images.forEach(img => {
                     const src = img.src;
