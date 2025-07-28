@@ -28,8 +28,21 @@ export const useProjectStore = defineStore('project', () => {
     }
 
     async function reload() {
-        if (project.value)
+        if (project.value) {
+            const previousPercent = availableNodesPercent.value;
             nodes.value = await nodesApi.list(project.value);
+            const currentPercent = availableNodesPercent.value;
+            
+            if (previousPercent < 100 && currentPercent === 100) {
+                await invalidate();
+                const images = document.querySelectorAll('img');
+                images.forEach(img => {
+                    const src = img.src;
+                    img.src = '';
+                    img.src = src;
+                });
+            }
+        }
     }
 
     async function sync(): Promise<void> {
