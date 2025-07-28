@@ -50,6 +50,7 @@ useIntervalFn(() => projectStore.reload(), 500);
         <span class="text-gray-600 text-sm">Project details</span>
       </div>
       <div class="flex gap-3">
+        <Input v-model="projectStore.project.secret" readonly class="w-66 bg-blue-100 text-blue-700"/>
         <Button @click="projectStore.destroy" class="cursor-pointer" variant="destructive">Delete
         </Button>
         <Button @click="viewInFigma(projectStore.project)" class="cursor-pointer" variant="outline">View in Figma
