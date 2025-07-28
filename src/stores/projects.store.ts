@@ -24,9 +24,5 @@ export const useProjectsStore = defineStore('projects', () => {
         projects.value = await projectsApi.list();
     }
 
-    async function sync(project: Project): Promise<void> {
-        await projectsApi.sync(project);
-    }
-
-    return {projects, state, importing, link, add, list,sync}
+    return {projects, state, importing, link, add, list}
 });

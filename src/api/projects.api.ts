@@ -20,4 +20,8 @@ async function sync(project: Project): Promise<void> {
     await api.post(`/projects/${project.id}/sync`);
 }
 
-export const projectsApi = {add, list, sync,find}
+async function render(project: Project): Promise<void> {
+    await api.post(`/projects/${project.id}/render`);
+}
+
+export const projectsApi = {add, list, sync, find, render}

@@ -13,6 +13,7 @@ export const useProjectStore = defineStore('project', () => {
     const project = ref<Project>();
     const nodes = ref<Node[]>();
     const search = ref<string>('');
+    const syncing = ref<boolean>(false);
 
     async function init() {
         state.value = 'Loading';
@@ -29,7 +30,35 @@ export const useProjectStore = defineStore('project', () => {
             nodes.value = await nodesApi.list(project.value);
     }
 
-    const filteredNodes = computed(() => nodes.value?.filter((node) => node.name.toLowerCase().includes(search.value)));
+    async function sync(): Promise<void> {
+        if (!project.value) return;
+        syncing.value = true;
+        await projectsApi.sync(project.value);
+        syncing.value = false;
+    }
 
-    return {route, init, project, nodes, filteredNodes, search, reload};
+    async function render(): Promise<void> {
+        if (!project.value) return;
+        await projectsApi.render(project.value);
+    }
+
+    const filteredNodes = computed(() => nodes.value?.filter((node) => node.name.toLowerCase().includes(search.value)));
+    const availableNodesCount = computed(() => nodes.value?.filter((node) => node.available).length ?? 0);
+    const availableNodesPercent = computed(() => Math.round(availableNodesCount.value / (nodes.value?.length ?? 0) * 100));
+
+    return {
+        route,
+        init,
+        project,
+        nodes,
+        filteredNodes,
+        search,
+        reload,
+        syncing,
+        sync,
+        state,
+        availableNodesCount,
+        availableNodesPercent,
+        render
+    };
 });
