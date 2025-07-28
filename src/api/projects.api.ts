@@ -11,4 +11,13 @@ async function list(): Promise<Project[]> {
     return response.data as Project[];
 }
 
-export const projectsApi = {add, list}
+async function find(id: string): Promise<Project> {
+    const response = await api.get(`/projects/${id}`);
+    return response.data as Project;
+}
+
+async function sync(project: Project): Promise<void> {
+    await api.post(`/projects/${project.id}/sync`);
+}
+
+export const projectsApi = {add, list, sync,find}

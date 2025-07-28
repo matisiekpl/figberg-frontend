@@ -10,3 +10,8 @@ const route = useRoute();
   <Layout v-else/>
 </template>
 
+<style>
+body {
+  overflow-y: scroll;
+}
+</style>
