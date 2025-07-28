@@ -1,3 +1,3 @@
 export const Config = {
-    serverUrl: 'http://localhost:3000',
+    serverUrl: window.location.href.includes('localhost') ? 'http://localhost:3000' : 'https://figberg.mateuszwozniak.com',
 };
