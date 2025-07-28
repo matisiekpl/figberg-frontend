@@ -24,4 +24,12 @@ async function render(project: Project): Promise<void> {
     await api.post(`/projects/${project.id}/render`);
 }
 
-export const projectsApi = {add, list, sync, find, render}
+async function invalidate(project: Project): Promise<void> {
+    await api.post(`/projects/${project.id}/invalidate`);
+}
+
+async function destroy(project: Project): Promise<void> {
+    await api.delete(`/projects/${project.id}`);
+}
+
+export const projectsApi = {add, list, sync, find, render, invalidate, destroy}

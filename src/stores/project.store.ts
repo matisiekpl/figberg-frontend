@@ -1,14 +1,16 @@
 import {defineStore} from "pinia";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import type {LoadingState} from "@/types/loadingState.ts";
 import {computed, ref} from "vue";
 import type {Project} from "@/types/project.ts";
 import type {Node} from "@/types/node.ts";
 import {projectsApi} from "@/api/projects.api.ts";
 import {nodesApi} from "@/api/nodes.api.ts";
+import {wait} from "@/lib/utils.ts";
 
 export const useProjectStore = defineStore('project', () => {
     const route = useRoute();
+    const router = useRouter();
     const state = ref<LoadingState>('Initialized');
     const project = ref<Project>();
     const nodes = ref<Node[]>();
@@ -42,6 +44,28 @@ export const useProjectStore = defineStore('project', () => {
         await projectsApi.render(project.value);
     }
 
+    const cacheInvalidationCounter = ref<number>(150);
+
+    async function invalidate(): Promise<void> {
+        if (!project.value) return;
+        projectsApi.invalidate(project.value);
+        cacheInvalidationCounter.value = 0;
+        await wait(200);
+        for (let i = 0; i < 150; i++) {
+            cacheInvalidationCounter.value++;
+            await wait(10);
+        }
+        project.value = await projectsApi.find(project.value.id);
+    }
+
+    async function destroy(): Promise<void> {
+        if (!project.value) return;
+        if (confirm('Are you sure you want to delete this project?')) {
+            await projectsApi.destroy(project.value);
+            await router.push(`/projects`);
+        }
+    }
+
     const filteredNodes = computed(() => nodes.value?.filter((node) => node.name.toLowerCase().includes(search.value)));
     const availableNodesCount = computed(() => nodes.value?.filter((node) => node.available).length ?? 0);
     const availableNodesPercent = computed(() => Math.round(availableNodesCount.value / (nodes.value?.length ?? 0) * 100));
@@ -59,6 +83,9 @@ export const useProjectStore = defineStore('project', () => {
         state,
         availableNodesCount,
         availableNodesPercent,
-        render
+        render,
+        cacheInvalidationCounter,
+        invalidate,
+        destroy,
     };
 });

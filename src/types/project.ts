@@ -8,4 +8,5 @@ export interface Project {
     secret: string;
     previewUrl: string;
     name: string;
+    cacheInvalidatedAt: string;
 }
